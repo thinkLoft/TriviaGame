@@ -1,10 +1,15 @@
-//  Interval Exercise (follow the instructions below).
+//  This listens for the class Answer which is not present on load and passes the button value to the function
+$(document).on('click', '.answer', function() {
+  validate($(this).val());
+});
 
 //  This code will run as soon as the page loads.
 window.onload = function() {
   //  Click events are done for us:
-  $('#validate').click(validate);
-  $('#start').click(timer.start);
+  $('#start').click(function() {
+    timer.start();
+    getQuestion(questionCounter);
+  });
 };
 
 //  Variable that will hold our setInterval that runs the timer
@@ -15,41 +20,40 @@ var clockRunning = false;
 
 //  Our timer object.
 var timer = {
+  // default time
   time: 30,
 
+  // reset function
   reset: function() {
-    timer.time = 30;
-
-    //  TODO: Change the "display" div to "00:00."
     $('#display').html('00:30');
+    timer.time = 30;
   },
 
+  // Start Timer function
   start: function() {
-    //  TODO: Use setInterval to start the count here and set the clock to running.
+    //Checks if the clock is running
     if (!clockRunning) {
+      $('#display').html('00:30');
       intervalId = setInterval(timer.count, 1000);
       clockRunning = true;
-      getQuestion(questionCounter);
     }
   },
 
+  // Stop Timer function
   stop: function() {
-    //  TODO: Use clearInterval to stop the count here and set the clock to not be running.
     clearInterval(intervalId);
-    clockrunning = false;
+    clockRunning = false;
   },
 
+  // This is the countdown function for the timer
   count: function() {
-    //  TODO: increment time by 1, remember we cant use "this" here.
+    // checks if the countdown reaches 0
     if (timer.time === 0) {
-      alert('You ran out of time!');
+      // runs the validate function without an answer
       validate();
     } else {
+      // ticks downt he timer and updates the time
       timer.time--;
-      //  TODO: Get the current time, pass that into the timer.timeConverter function,
-      //        and save the result in a variable.
-      // currentT = timer.timeConverter(time);
-      //  TODO: Use the variable you just created to show the converted time in the "display" div.
       $('#display').html(timer.timeConverter(timer.time));
     }
   },
@@ -73,12 +77,16 @@ var timer = {
   }
 };
 
+// Starting of what will become the Questionnaire object
+// First lines are variable initializations
+
+// First Question Object
 var question1 = {
   question: 'What year was the last Ontario Elections (As of July 2018)?',
   answers: [2014, 2015, 2016, 2017, 2018],
   correct: 2018
 };
-
+// Second Question Object
 var question2 = {
   question: 'Who Won the Last Ontario Elections?',
   answers: [
@@ -90,48 +98,84 @@ var question2 = {
   correct: 'Progressive Conservative Party of Ontario'
 };
 
+// Third Question Object
 var question3 = {
   question: 'Who is the leader of the winning Party?',
   answers: ['Doug Ford', 'Andrea Horwath', 'John Fraser', 'Mike Schreiner'],
   correct: 'Doug Ford'
 };
 
+// Array to hold all the questions to allow iteration
 var questionDatabase = [question1, question2, question3];
-var questionCounter = 0;
+// Key Variables to keep track, assigning all to zero
+var questionCounter, userRight, userWrong, Unanswered;
+questionCounter = userRight = userWrong = unAnswered = 0;
 
+// Updates HTML with the current Question and it's respective Answers
 function getQuestion(x) {
-  $('#question').html(questionDatabase[x].question);
+  // Gets Latest Question
+  $('#question').html('<h1>' + questionDatabase[x].question + '</h1>');
+  // Clears any previous answers
   $('#answers').html('');
+  // Adds each answer
   for (i = 0; i < questionDatabase[x].answers.length; i++) {
     $('#answers').append(
-      '<input type="radio" name="answers" value="' +
+      '<button class="answer btn btn-outline-primary btn-lg" value="' +
         i +
         '">' +
         questionDatabase[x].answers[i] +
-        '<br>'
+        '</button></br>'
     );
   }
 }
 
-function validate() {
-  var ans =
-    questionDatabase[questionCounter].answers[
-      $('input[type=radio][name=answers]:checked').val()
-    ];
-  if (ans !== undefined) {
-    if (ans === questionDatabase[questionCounter].correct) {
-      alert('Correct!');
-    } else {
-      alert('Wrong!');
-    }
-  }
+// Validate verifies the user input and lets them know if the answer is right or wrong
+function validate(v) {
+  // stop the timer
   timer.stop();
-  timer.reset();
-  if (questionCounter < questionDatabase.length) {
-    questionCounter++;
-    getQuestion(questionCounter);
-    timer.start();
+  //assign user response
+  var ans = questionDatabase[questionCounter].answers[v];
+  // retrieve correct answer from Question Object
+  var correctAnswer = questionDatabase[questionCounter].correct;
+  // Checks if the answer is correct
+  if (ans !== undefined) {
+    if (ans === correctAnswer) {
+      userRight++;
+      $('#answers').css('color', 'green');
+      $('#answers').html('<h2>Your Correct!</h2>');
+      $('#answers').append('<h3>Answer: ' + correctAnswer + '</h3>');
+    } else {
+      userWrong++;
+      $('#answers').css('color', 'red');
+      $('#answers').html('<h2>Your Wrong!</h2>');
+      $('#answers').append('<h3>Your Answer: ' + ans + '</h3>');
+      $('#answers').append(
+        '<h3 style="color:green;">Correct Answer: ' + correctAnswer + '</h3>'
+      );
+    }
   } else {
-    alert('You Won the game!');
+    unAnswered++;
+    $('#answers').css('color', 'white');
+    $('#answers').html('<h1>You Ran out of Time!</h1>');
+    $('#answers').append('<h3>Answer: ' + correctAnswer + '</h3>');
+  }
+  // This section checks if there are any more questions left to ask
+  if (questionCounter < questionDatabase.length - 1) {
+    questionCounter++;
+    timer.reset();
+    setTimeout(function() {
+      timer.start();
+      getQuestion(questionCounter);
+    }, 5000);
+  } else {
+    //This section is when the game has asked all questions and tells you the score
+    setTimeout(function() {
+      $('#question').html('You Won the Game!');
+      $('#answers').css('color', 'white');
+      $('#answers').html('<h3> Here is your Score</h3>');
+      $('#answers').append('Correct Answers: ' + userRight + '</br>');
+      $('#answers').append('Incorrect Answers: ' + userWrong + '</br>');
+      $('#answers').append('Unanswered: ' + unAnswered + '');
+    }, 5000);
   }
 }
