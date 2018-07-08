@@ -1,15 +1,17 @@
-//  This listens for the class Answer which is not present on load and passes the button value to the function
+//  Answer Button Listener not present onload
 $(document).on('click', '.answer', function() {
   validate($(this).val());
 });
 
-//  This code will run as soon as the page loads.
+//  Start Button Listener which dynamically disappears on start
+$(document).on('click', '#start', function() {
+  timer.start();
+  getQuestion(questionCounter);
+});
+
+//  Reset Button Listener static on Load
 window.onload = function() {
-  //  Click events are done for us:
-  $('#start').click(function() {
-    timer.start();
-    getQuestion(questionCounter);
-  });
+  $('#reset').on('click', reset);
 };
 
 //  Variable that will hold our setInterval that runs the timer
@@ -18,22 +20,24 @@ var intervalId;
 // prevents the clock from being sped up unnecessarily
 var clockRunning = false;
 
+var defaultTime = 10;
+
 //  Our timer object.
 var timer = {
   // default time
-  time: 30,
+  time: defaultTime,
 
   // reset function
   reset: function() {
-    $('#display').html('00:30');
-    timer.time = 30;
+    timer.time = defaultTime;
+    $('#display').html('00:' + defaultTime);
   },
 
   // Start Timer function
   start: function() {
     //Checks if the clock is running
     if (!clockRunning) {
-      $('#display').html('00:30');
+      $('#display').html('00:' + defaultTime);
       intervalId = setInterval(timer.count, 1000);
       clockRunning = true;
     }
@@ -142,23 +146,20 @@ function validate(v) {
     if (ans === correctAnswer) {
       userRight++;
       $('#answers').css('color', 'green');
-      $('#answers').html('<h2>Your Correct!</h2>');
-      $('#answers').append('<h3>Answer: ' + correctAnswer + '</h3>');
+      $('#answers').html('<h2>You got it right!</h2>');
     } else {
       userWrong++;
       $('#answers').css('color', 'red');
-      $('#answers').html('<h2>Your Wrong!</h2>');
+      $('#answers').html("<h2>You're incorrect!</h2>");
       $('#answers').append('<h3>Your Answer: ' + ans + '</h3>');
-      $('#answers').append(
-        '<h3 style="color:green;">Correct Answer: ' + correctAnswer + '</h3>'
-      );
     }
   } else {
     unAnswered++;
     $('#answers').css('color', 'white');
     $('#answers').html('<h1>You Ran out of Time!</h1>');
-    $('#answers').append('<h3>Answer: ' + correctAnswer + '</h3>');
   }
+  // Shows the user the correct Answer
+  $('#answers').append('<h3> Correct Answer: ' + correctAnswer + '</h3>');
   // This section checks if there are any more questions left to ask
   if (questionCounter < questionDatabase.length - 1) {
     questionCounter++;
@@ -170,7 +171,7 @@ function validate(v) {
   } else {
     //This section is when the game has asked all questions and tells you the score
     setTimeout(function() {
-      $('#question').html('You Won the Game!');
+      $('#question').html('This is the end of the Game!');
       $('#answers').css('color', 'white');
       $('#answers').html('<h3> Here is your Score</h3>');
       $('#answers').append('Correct Answers: ' + userRight + '</br>');
@@ -178,4 +179,16 @@ function validate(v) {
       $('#answers').append('Unanswered: ' + unAnswered + '');
     }, 5000);
   }
+}
+
+function reset() {
+  timer.stop();
+  timer.time = defaultTime;
+  questionCounter = userRight = userWrong = unAnswered = 0;
+  $('#display').html('00:00');
+  $('#question').html(
+    '<button id="start" class="btn btn-success btn-lg">Start</button>'
+  );
+  $('#answers').html('');
+  $('#result').html('');
 }
