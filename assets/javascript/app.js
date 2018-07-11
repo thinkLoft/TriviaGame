@@ -86,13 +86,13 @@ var timer = {
 
 // First Question Object
 var question1 = {
-  question: 'What year was the last Ontario Elections (As of July 2018)?',
+  question: '1. What year was the last Ontario Elections (As of July 2018)?',
   answers: [2014, 2015, 2016, 2017, 2018],
   correct: 2018
 };
 // Second Question Object
 var question2 = {
-  question: 'Who Won the Last Ontario Elections?',
+  question: '2. Who Won the Last Ontario Elections?',
   answers: [
     'Progressive Conservative Party of Ontario',
     'Ontario New Democratic Party',
@@ -104,13 +104,56 @@ var question2 = {
 
 // Third Question Object
 var question3 = {
-  question: 'Who is the leader of the winning Party?',
+  question: '3. Who is the leader of the winning Party?',
   answers: ['Doug Ford', 'Andrea Horwath', 'John Fraser', 'Mike Schreiner'],
   correct: 'Doug Ford'
 };
 
+// Fourth Question Object
+var question4 = {
+  question: '4. How many seats are in the Ontario Legislature?',
+  answers: [205, 85, 124, 276],
+  correct: 124
+};
+
+// Fifth Question Object
+var question5 = {
+  question: '5. What day was voting held?',
+  answers: ['June 1', 'June 2', 'June 6', 'June 7'],
+  correct: 'June 7'
+};
+
+// Sixth Question Object
+var question6 = {
+  question: '6. What Number Election did we just have?',
+  answers: [40, 41, 42, 43],
+  correct: 42
+};
+
+// Seventh Question Object
+var question7 = {
+  question: '7. How many seats are needed for the majority?',
+  answers: [40, 63, 12, 94],
+  correct: 63
+};
+
+// Eith Question Object
+var question8 = {
+  question: '8. Which Year had the Highest Voter Turnout?',
+  answers: [1999, 2007, 2011, 2018],
+  correct: 1999
+};
 // Array to hold all the questions to allow iteration
-var questionDatabase = [question1, question2, question3];
+var questionDatabase = [
+  question1,
+  question2,
+  question3,
+  question4,
+  question5,
+  question6,
+  question7,
+  question8
+];
 // Key Variables to keep track, assigning all to zero
 var questionCounter, userRight, userWrong, Unanswered;
 questionCounter = userRight = userWrong = unAnswered = 0;
