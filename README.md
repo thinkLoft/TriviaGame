@@ -1,25 +1,20 @@
 # TriviaGame
 
-Pseodo
+## Overview
 
-Parametes
+### This is a Trivia game using JavaScript for the logic and jQuery to manipulate HTML. It is a simple Multiple choice application that will ask the user 8 questions.
 
-1.  Question Objects with the following variables
-    a. Var for the question
-    b. Array of 4 answers
-    c. correct answer
-    d. Check answer function
+The User has 10 Seconds to Answer each question.
+When the user answers, they will get a notification if they got the question right or wrong.
+If the user runs out of time, they miss the question and will be shown the correct answer.
+At the end of the App, they will see the amount of questions they got right, wrong and left unanswered.
+User can Reset at anytime to start over
 
-2.  variable for timer/stopwatch
-3.  Variable for INterval
+### File Map:
 
-Questions.
-
-1.  What year was the last Ontario Elections (As of July 2018)
-    ans: 2014, 2015, 2016, 2017, 2018
-
-2.  Who Won the Last Ontario Elections
-    ans. Progressive Conservative Party of Ontario, Ontario New Democratic Party, Ontario Liberal Party, Green Party of Ontario
-
-3.  Whats the leader of the winning Party?
-    ans. Doug Ford, Andrea Horwath, John Fraser, Mike Schreiner
+```
+- index.html
+- assets/javascript/app.js
+- assets/css
+- assets/images/styles.css
+```
